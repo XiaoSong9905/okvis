@@ -51,10 +51,7 @@ MultiFrame::MultiFrame(const cameras::NCameraSystem & cameraSystem,
   resetCameraSystemAndFrames(cameraSystem);
 }
 
-MultiFrame::~MultiFrame()
-{
-
-}
+MultiFrame::~MultiFrame() = default;
 
 // (Re)set the NCameraSystem -- which clears the frames as well.
 void MultiFrame::resetCameraSystemAndFrames(
@@ -182,6 +179,19 @@ int MultiFrame::describe(size_t cameraIdx,
   OKVIS_ASSERT_TRUE_DBG(Exception, cameraIdx < frames_.size(), "Out of range");
   return frames_[cameraIdx].describe(extractionDirection);
 }
+
+/**
+ * @brief Detect & describe keypoint
+ * 
+ * @param cameraIdx The camera index.
+ * @return the number of detected points. 
+ */
+inline int MultiFrame::detectAndDescribe( size_t cameraIdx )
+{
+    OKVIS_ASSERT_TRUE_DBG(Exception, cameraIdx < frames_.size(), "Out of range");
+    return frames_[ cameraIdx ].detectAndDescribe();
+}
+
 template<class GEOMETRY_T>
 int MultiFrame::describeAs(size_t cameraIdx,
                            const Eigen::Vector3d & extractionDirection)

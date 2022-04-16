@@ -18,6 +18,8 @@ add_library(${PROJECT_NAME}
   src/ProbabilisticStereoTriangulator.cpp
   src/FrameNoncentralAbsoluteAdapter.cpp
   src/FrameRelativeAdapter.cpp
+  src/gcnv2.cc
+  include/okvis/gcnv2.h
   include/okvis/Frontend.hpp
   include/okvis/VioKeyframeWindowMatchingAlgorithm.hpp
   include/okvis/triangulation/stereo_triangulation.hpp
@@ -45,3 +47,5 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib
 )
 install(DIRECTORY include/ DESTINATION ${INSTALL_INCLUDE_DIR} COMPONENT dev FILES_MATCHING PATTERN "*.hpp")
+
+# see: https://github.com/pytorch/pytorch/issues/14352

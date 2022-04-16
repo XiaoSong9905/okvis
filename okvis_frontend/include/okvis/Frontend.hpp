@@ -55,6 +55,18 @@ namespace okvis {
  * @brief A frontend using BRISK features
  */
 class Frontend : public VioFrontendInterface {
+
+  private:
+    enum class FEATURE_TYPE
+    {
+      BRISK,
+      ORB,
+      GCN
+    };
+
+    // Which feature detector to use
+    FEATURE_TYPE feature_type = FEATURE_TYPE::GCN;
+
  public:
   OKVIS_DEFINE_EXCEPTION(Exception, std::runtime_error)
 
@@ -89,6 +101,13 @@ class Frontend : public VioFrontendInterface {
                                  std::shared_ptr<okvis::MultiFrame> frameOut,
                                  const okvis::kinematics::Transformation& T_WC,
                                  const std::vector<cv::KeyPoint> * keypoints);
+
+  void detectAndDescribeBRISK( size_t cameraIndex, \
+                               std::shared_ptr<okvis::MultiFrame> frameOut, \
+                               const okvis::kinematics::Transformation& T_WC );
+  
+  void detectAndDescribeGCN( size_t cameraIndex, \
+                             std::shared_ptr<okvis::MultiFrame> frameOut );
 
   /**
    * @brief Matching as well as initialization of landmarks and state.
@@ -272,6 +291,14 @@ class Frontend : public VioFrontendInterface {
    * @warning Lock with featureDetectorMutexes_[cameraIndex] when using the descriptor.
    */
   std::vector<std::shared_ptr<cv::DescriptorExtractor> > descriptorExtractors_;
+
+  /**
+   * @brief Feature detector and descriptor in same setting
+   *        The vector contain one for each camera to ensure that there are no problem with parallel detection.
+   * @warning Lock with featureDetectorMutexes_[cameraIndex] when using. (TODO: not sure if needed)
+   */
+  std::vector<std::shared_ptr<cv::Feature2D>> featureDetectorDescriptor_;
+
   /// Mutexes for feature detectors and descriptors.
   std::vector<std::unique_ptr<std::mutex> > featureDetectorMutexes_;
 
@@ -411,6 +438,9 @@ class Frontend : public VioFrontendInterface {
 
   /// (re)instantiates feature detectors and descriptor extractors. Used after settings changed or at startup.
   void initialiseBriskFeatureDetectors();
+
+  // Initialize GCN feature detector & descriptor
+  void initGCNFeatureDetectorDescriptor();
 
 };
 

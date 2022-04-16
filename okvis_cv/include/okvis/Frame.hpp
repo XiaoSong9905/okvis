@@ -67,17 +67,9 @@ class Frame
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   OKVIS_DEFINE_EXCEPTION(Exception, std::runtime_error)
 
-  /// \brief a default constructor
-  inline Frame()
-  {
-  }
+  Frame() = default;
 
-  /// \brief A constructor that uses the image, specified geometry,
-  /// detector and extractor
-  /// @param[in] image The image.
-  /// @param[in] cameraGeometry The camera geometry.
-  /// @param[in] detector The detector to be used.
-  /// @param[in] extractor The extractor to be used.
+  /// \brief a defaultdetectAndDescribector The extractor to be used.
   inline Frame(const cv::Mat & image,
         std::shared_ptr<cameras::CameraBase> & cameraGeometry,
         std::shared_ptr<cv::FeatureDetector> & detector,
@@ -129,6 +121,13 @@ class Frame
   /// \return The number of detected points.
   inline int describe(
       const Eigen::Vector3d & extractionDirection = Eigen::Vector3d(0, 0, 1));
+
+  /**
+   * @brief Detect & describe keypoint
+   * 
+   * @return number of detected points
+   */
+  inline int detectAndDescribe( );
 
   /// \brief Describe keypoints. This uses virtual function calls.
   ///        That's a negligibly small overhead for many detections.

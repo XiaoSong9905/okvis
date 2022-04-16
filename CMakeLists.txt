@@ -54,6 +54,10 @@ else()
   message(STATUS "Building with build type '${CMAKE_BUILD_TYPE}'")
 endif()
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+message(STATUS "!!!!!CXX version ${CMAKE_CXX_STANDARD}" )
+
 if(APPLE)
   # The clang compiler (on osx) is somehow much more strict
   # than the compilers on ubuntu and so this does not seem
@@ -103,6 +107,14 @@ endif()
 # glog
 find_package(Glog REQUIRED)
 include_directories(BEFORE ${GLOG_INCLUDE_DIRS}) 
+
+# libtorch
+find_package(Torch REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+include_directories(${TORCH_INCLUDE_DIRS})
+message(STATUS "Found Torch dir : ${TORCH_INCLUDE_DIRS}")
+message(STATUS "Found Torch lib : ${TORCH_LIBRARIES}")
+
 
 # brisk
 if(${USE_SYSTEM_BRISK})
@@ -331,6 +343,7 @@ if(BUILD_APPS)
     okvis_multisensor_processing
     pthread 
     ${Boost_LIBRARIES}
+    ${TORCH_LIBRARIES}
   )
   if(${VISENSORDRIVER_FOUND})
     target_link_libraries(okvis_app_synchronous ${VISensorDriver_LIBRARY})

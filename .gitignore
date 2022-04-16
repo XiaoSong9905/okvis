@@ -27,5 +27,9 @@
 *.out
 *.app
 
+# cmake
+build/
+build_gcn/
+
 # Docu
 documentation/html/

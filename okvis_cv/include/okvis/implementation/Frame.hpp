@@ -154,6 +154,31 @@ int Frame::describe(const Eigen::Vector3d & extractionDirection)
   landmarkIds_ = std::vector<uint64_t>(keypoints_.size(),0);
   return keypoints_.size();
 }
+
+/**
+ * @brief detect and describe keypoints.
+ *  Use virtual function call (extrctor->detectAndCompute())
+ * 
+ * @return Number of keypoint detected
+ */
+int Frame::detectAndDescribe( )
+{
+    // Clear container
+    keypoints_.clear();
+    descriptors_.resize(0);
+    landmarkIds_.clear();
+
+    OKVIS_ASSERT_TRUE_DBG( Exception, extractor_ != nullptr, "Feature extractor not initialised!" );
+
+    // Run actual feature extractor
+    extractor_->detectAndCompute( image_, cv::noArray(), keypoints_, descriptors_ );
+
+    landmarkIds_ = std::vector<uint64_t>( keypoints_.size(), 0 );
+
+    return keypoints_.size();
+}
+
+
 // describe keypoints. This uses virtual function calls.
 ///        That's a negligibly small overhead for many detections.
 ///        \param extractionDirection the extraction direction in camera frame
