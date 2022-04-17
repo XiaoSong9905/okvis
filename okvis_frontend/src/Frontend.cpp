@@ -897,7 +897,7 @@ void Frontend::initORBFeatureDetectorDescriptor()
     for ( int i = 0; i < numCameras_; ++i )
     {
         featureDetectorDescriptor_.push_back( std::shared_ptr<cv::Feature2D>( \
-            new ORBv2::ORBv2DetectorDescriptor( 480,640 )));
+            new orb::ORBDetectorDescriptor( /*add hyper parameter */ )));
     }
 }
 
