@@ -108,12 +108,12 @@ endif()
 find_package(Glog REQUIRED)
 include_directories(BEFORE ${GLOG_INCLUDE_DIRS}) 
 
-# libtorch
-find_package(Torch REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-include_directories(${TORCH_INCLUDE_DIRS})
-message(STATUS "Found Torch dir : ${TORCH_INCLUDE_DIRS}")
-message(STATUS "Found Torch lib : ${TORCH_LIBRARIES}")
+# libtorch for gcnv2
+# find_package(Torch REQUIRED)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+# include_directories(${TORCH_INCLUDE_DIRS})
+# message(STATUS "Found Torch dir : ${TORCH_INCLUDE_DIRS}")
+# message(STATUS "Found Torch lib : ${TORCH_LIBRARIES}")
 
 
 # brisk

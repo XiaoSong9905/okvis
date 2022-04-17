@@ -18,8 +18,8 @@ add_library(${PROJECT_NAME}
   src/ProbabilisticStereoTriangulator.cpp
   src/FrameNoncentralAbsoluteAdapter.cpp
   src/FrameRelativeAdapter.cpp
-  src/gcnv2.cc
-  include/okvis/gcnv2.h
+  src/orb.cc
+  include/okvis/orb.h
   include/okvis/Frontend.hpp
   include/okvis/VioKeyframeWindowMatchingAlgorithm.hpp
   include/okvis/triangulation/stereo_triangulation.hpp

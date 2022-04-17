@@ -41,7 +41,7 @@
 #include <okvis/Frontend.hpp>
 
 #include <brisk/brisk.h>
-#include <okvis/gcnv2.h>
+#include <okvis/orb.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <glog/logging.h>
 
@@ -91,8 +91,8 @@ Frontend::Frontend(size_t numCameras)
         case FEATURE_TYPE::BRISK :
             initialiseBriskFeatureDetectors();
             break;
-        case FEATURE_TYPE::GCN :
-            initGCNFeatureDetectorDescriptor();
+        case FEATURE_TYPE::ORB :
+            initORBFeatureDetectorDescriptor();
             break;
         default:
             initialiseBriskFeatureDetectors();
@@ -120,13 +120,13 @@ void Frontend::detectAndDescribeBRISK( size_t cameraIndex, \
 
 
 /**
- * @brief Detect feature and compute descriptor using GCN (DL model)
+ * @brief Detect feature and compute descriptor using ORB (DL model)
  * 
  */
-void Frontend::detectAndDescribeGCN( size_t cameraIndex, \
+void Frontend::detectAndDescribeORB( size_t cameraIndex, \
                                      std::shared_ptr<okvis::MultiFrame> frameOut )
 {
-    printf("gcn detector work\n");
+    printf("ORB detector work\n");
     frameOut->setExtractor( cameraIndex, featureDetectorDescriptor_[ cameraIndex ] );
     frameOut->detectAndDescribe( cameraIndex );
 }
@@ -151,8 +151,8 @@ bool Frontend::detectAndDescribe(size_t cameraIndex,
         case FEATURE_TYPE::BRISK :
             detectAndDescribeBRISK( cameraIndex, frameOut, T_WC );
             break;
-        case FEATURE_TYPE::GCN :
-            detectAndDescribeGCN( cameraIndex, frameOut );
+        case FEATURE_TYPE::ORB :
+            detectAndDescribeORB( cameraIndex, frameOut );
             break;
         default:
             detectAndDescribeBRISK( cameraIndex, frameOut, T_WC );
@@ -890,14 +890,14 @@ void Frontend::initialiseBriskFeatureDetectors()
   }
 }
 
-void Frontend::initGCNFeatureDetectorDescriptor()
+void Frontend::initORBFeatureDetectorDescriptor()
 {
     featureDetectorDescriptor_.clear();
 
     for ( int i = 0; i < numCameras_; ++i )
     {
         featureDetectorDescriptor_.push_back( std::shared_ptr<cv::Feature2D>( \
-            new gcnv2::GCNv2DetectorDescriptor( 480,640 )));
+            new ORBv2::ORBv2DetectorDescriptor( 480,640 )));
     }
 }
 

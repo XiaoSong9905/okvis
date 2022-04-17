@@ -65,7 +65,7 @@ class Frontend : public VioFrontendInterface {
     };
 
     // Which feature detector to use
-    FEATURE_TYPE feature_type = FEATURE_TYPE::GCN;
+    FEATURE_TYPE feature_type = FEATURE_TYPE::ORB;
 
  public:
   OKVIS_DEFINE_EXCEPTION(Exception, std::runtime_error)
@@ -106,7 +106,7 @@ class Frontend : public VioFrontendInterface {
                                std::shared_ptr<okvis::MultiFrame> frameOut, \
                                const okvis::kinematics::Transformation& T_WC );
   
-  void detectAndDescribeGCN( size_t cameraIndex, \
+  void detectAndDescribeORB( size_t cameraIndex, \
                              std::shared_ptr<okvis::MultiFrame> frameOut );
 
   /**
@@ -439,8 +439,8 @@ class Frontend : public VioFrontendInterface {
   /// (re)instantiates feature detectors and descriptor extractors. Used after settings changed or at startup.
   void initialiseBriskFeatureDetectors();
 
-  // Initialize GCN feature detector & descriptor
-  void initGCNFeatureDetectorDescriptor();
+  // Initialize ORB feature detector & descriptor
+  void initORBFeatureDetectorDescriptor();
 
 };
 
