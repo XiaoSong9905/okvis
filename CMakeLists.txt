@@ -40,6 +40,8 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
+
 # make sure we use Release and warn otherwise
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -105,16 +107,17 @@ endif()
 
 
 # glog
+set (Glog_DIR "/usr/local/lib/cmake/glog")
 find_package(Glog REQUIRED)
 include_directories(BEFORE ${GLOG_INCLUDE_DIRS}) 
 
 # libtorch
-find_package(Torch REQUIRED)
+#[[find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 include_directories(${TORCH_INCLUDE_DIRS})
 message(STATUS "Found Torch dir : ${TORCH_INCLUDE_DIRS}")
 message(STATUS "Found Torch lib : ${TORCH_LIBRARIES}")
-
+]]
 
 # brisk
 if(${USE_SYSTEM_BRISK})
@@ -318,12 +321,16 @@ add_subdirectory(okvis_matcher)
 add_dependencies(okvis_matcher okvis_util)
 
 include_directories(okvis_frontend/include)
+message (STATUS "BEFORE OKVIS FRONTEND")
 add_subdirectory(okvis_frontend)
+message (STATUS "AFTER OKVIS FRONTEND")
 add_dependencies(okvis_frontend opengv okvis_util)
 
 include_directories(okvis_multisensor_processing/include)
+message (STATUS "BEFORE OKVIS MULTISENSOR")
 add_subdirectory(okvis_multisensor_processing)
-add_dependencies(okvis_multisensor_processing okvis_util)
+message (STATUS "AFTER OKVIS MULTISENSOR")
+add_dependencies(okvis_multisensor_processing okvis_frontend okvis_util)
 
 # also build the apps
 if(BUILD_APPS)
@@ -339,12 +346,11 @@ if(BUILD_APPS)
     okvis_ceres
     okvis_timing
     okvis_matcher
-    okvis_frontend 
     okvis_multisensor_processing
     pthread 
     ${Boost_LIBRARIES}
-    ${TORCH_LIBRARIES}
   )
+  target_link_libraries(okvis_app_synchronous okvis_frontend)
   if(${VISENSORDRIVER_FOUND})
     target_link_libraries(okvis_app_synchronous ${VISensorDriver_LIBRARY})
   endif()
@@ -353,7 +359,6 @@ if(BUILD_APPS)
     EXPORT okvisTargets
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin)
 endif()
-
 # installation is invoked in the individual modules...
 export (TARGETS 
     okvis_app_synchronous

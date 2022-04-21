@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include <okvis/gcnv2.h>
+#include <okvis/gcnv2.hpp>
 #include <torch/script.h>
 
 namespace gcnv2
@@ -30,7 +30,7 @@ void GCNv2DetectorDescriptor::initTorch( )
     {
         // Deserialize the Module from a file using torch::jit::load().
         torch_model = torch::jit::load( model_filename );
-        torch_model->to( torch_device );
+        torch_model->to( torch::kCUDA );
     }
     catch ( std::exception& e )
     {
@@ -171,7 +171,7 @@ void GCNv2DetectorDescriptor::detectAndComputeTorch( cv::Mat& _gray_image_fp32, 
 
     // Convert OpenCV data to torch compatable data type
     static std::vector<int64_t> dims = {1, img_height, img_width, 1};
-    auto input_torch = torch::from_blob( img_frame.data, dims, torch::kFloat32 ).to( torch_device );
+    auto input_torch = torch::from_blob( img_frame.data, dims, torch::kFloat32 ).to( torch::kCUDA );
     input_torch = input_torch.permute({0, 3, 1, 2});
     std::vector<torch::jit::IValue> inputs_torch;
     inputs_torch.push_back( input_torch );

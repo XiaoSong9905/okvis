@@ -40,9 +40,10 @@ target_link_libraries(${PROJECT_NAME}
    PUBLIC okvis_cv 
    PUBLIC okvis_common
    PUBLIC okvis_ceres 
-   PUBLIC okvis_frontend
    PRIVATE ${GLOG_LIBRARIES}
 )
+
+target_link_libraries(${PROJECT_NAME} PRIVATE okvis_frontend)
 
 # export config
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_BINARY_DIR}/okvisConfig.hpp)

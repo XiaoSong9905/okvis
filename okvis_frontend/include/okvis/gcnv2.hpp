@@ -61,7 +61,7 @@ class GCNv2DetectorDescriptor : public cv::Feature2D
          */
         virtual cv::String getDefaultName() const override;
     
-    protected:
+    private:
         // Model input height & width
         // All three type of runtime require fixed size input
         const int img_height;

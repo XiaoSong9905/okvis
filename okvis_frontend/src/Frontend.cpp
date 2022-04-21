@@ -41,7 +41,7 @@
 #include <okvis/Frontend.hpp>
 
 #include <brisk/brisk.h>
-#include <okvis/gcnv2.h>
+#include <okvis/gcnv2.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <glog/logging.h>
 
