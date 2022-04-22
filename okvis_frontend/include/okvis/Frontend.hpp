@@ -65,7 +65,7 @@ class Frontend : public VioFrontendInterface {
     };
 
     // Which feature detector to use
-    FEATURE_TYPE feature_type = FEATURE_TYPE::ORB;
+    FEATURE_TYPE feature_type;
 
  public:
   OKVIS_DEFINE_EXCEPTION(Exception, std::runtime_error)

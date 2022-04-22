@@ -38,6 +38,9 @@
  * @author Stefan Leutenegger
  */
 
+#include <cstdlib> // read enviroment variable
+#include <string>
+
 #include <okvis/Frontend.hpp>
 
 #include <brisk/brisk.h>
@@ -85,6 +88,20 @@ Frontend::Frontend(size_t numCameras)
     // {
     //     featureDetectorMutexes_.push_back(std::unique_ptr<std::mutex>(new std::mutex()));
     // }
+
+    // Set feature type based on enviroment variable
+    // usage: export OKVIS_FEATURE_TYPE=BRISK
+    //        export OKVIS_FEATURE_TYPE=ORB
+    std::string feature_type_str = std::getenv("OKVIS_FEATURE_TYPE");
+    if ( feature_type_str == "ORB" || feature_type_str == "orb" )
+    {
+      feature_type = FEATURE_TYPE::ORB;
+    }
+    // Use brisk by default
+    else
+    {
+      feature_type = FEATURE_TYPE::BRISK;
+    }
 
     switch( feature_type )
     {
@@ -897,7 +914,7 @@ void Frontend::initORBFeatureDetectorDescriptor()
     for ( int i = 0; i < numCameras_; ++i )
     {
         featureDetectorDescriptor_.push_back( std::shared_ptr<cv::Feature2D>( \
-            new orb::ORBDetectorDescriptor( /*add hyper parameter */ )));
+            new orb::ORBDetectorDescriptor( ))); // Use default parameter
     }
 }
 
