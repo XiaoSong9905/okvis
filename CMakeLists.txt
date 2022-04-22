@@ -40,7 +40,7 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=1")
 
 # make sure we use Release and warn otherwise
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -321,15 +321,11 @@ add_subdirectory(okvis_matcher)
 add_dependencies(okvis_matcher okvis_util)
 
 include_directories(okvis_frontend/include)
-message (STATUS "BEFORE OKVIS FRONTEND")
 add_subdirectory(okvis_frontend)
-message (STATUS "AFTER OKVIS FRONTEND")
 add_dependencies(okvis_frontend opengv okvis_util)
 
 include_directories(okvis_multisensor_processing/include)
-message (STATUS "BEFORE OKVIS MULTISENSOR")
 add_subdirectory(okvis_multisensor_processing)
-message (STATUS "AFTER OKVIS MULTISENSOR")
 add_dependencies(okvis_multisensor_processing okvis_frontend okvis_util)
 
 # also build the apps

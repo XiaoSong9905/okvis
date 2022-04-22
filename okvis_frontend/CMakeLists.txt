@@ -17,6 +17,7 @@ message(STATUS "Found Torch lib : ${TORCH_LIBRARIES}")
 find_package( Eigen REQUIRED )
 include_directories(${EIGEN_INCLUDE_DIR}) 
 
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=1")
 # build the library
 add_library(${PROJECT_NAME} SHARED
   src/Frontend.cpp
