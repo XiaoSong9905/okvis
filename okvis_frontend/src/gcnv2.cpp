@@ -65,7 +65,7 @@ void GCNv2DetectorDescriptor::detectAndCompute( cv::InputArray _image, \
 
     // Convert image to gray scale
     cv::Mat _gray_image_fp32 = _image.getMat();
-    if ( _gray_image_fp32.type() != CV_8UC1 || _gray_image_fp32.type() != CV_32FC1 )
+    if ( _gray_image_fp32.type() != CV_8UC1 && _gray_image_fp32.type() != CV_32FC1 )
     {
         cv::cvtColor( _gray_image_fp32, _gray_image_fp32, cv::COLOR_BGR2GRAY );
     }

@@ -126,7 +126,6 @@ void Frontend::detectAndDescribeBRISK( size_t cameraIndex, \
 void Frontend::detectAndDescribeGCN( size_t cameraIndex, \
                                      std::shared_ptr<okvis::MultiFrame> frameOut )
 {
-    printf("gcn detector work\n");
     frameOut->setExtractor( cameraIndex, featureDetectorDescriptor_[ cameraIndex ] );
     frameOut->detectAndDescribe( cameraIndex );
 }
