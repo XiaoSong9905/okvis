@@ -162,18 +162,14 @@ void GCNv2DetectorDescriptor::detectAndComputeTorch( cv::Mat& _gray_image_fp32, 
                                                      cv::OutputArray& _descriptors )
 {
     // Stack the gray scale image in the way model expects it
-    cv::Mat tmp_frame, img_frame;
-    cv::resize( _gray_image_fp32, tmp_frame, cv::Size( img_width/3, img_height/3 ) );
-    cv::hconcat(tmp_frame, tmp_frame, img_frame);
-    cv::hconcat(img_frame, tmp_frame, img_frame);
-    cv::copyMakeBorder(img_frame, img_frame, 0, 2*img_height/3, 0, 0, cv::BORDER_CONSTANT, 0);
     int dist_threshold = 8; // TODO: this should be a config param based on img height and img width
 
     // Convert OpenCV data to torch compatable data type
     static std::vector<int64_t> dims = {1, img_height, img_width, 1};
-    auto input_torch = torch::from_blob( img_frame.data, dims, torch::kFloat32 ).to( torch::kCUDA );
-    input_torch = input_torch.permute({0, 3, 1, 2});
     std::vector<torch::jit::IValue> inputs_torch;
+
+    auto input_torch = torch::from_blob( _gray_image_fp32.data, dims, torch::kFloat32 ).to( torch::kCUDA );
+    input_torch = input_torch.permute({0, 3, 1, 2});
     inputs_torch.push_back( input_torch );
 
     // Run model
