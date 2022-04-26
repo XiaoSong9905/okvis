@@ -79,7 +79,8 @@ class GCNv2DetectorDescriptor : public cv::Feature2D
         // Run deep learning module 
         void detectAndComputeTorch( cv::Mat& _gray_image_fp32, \
                                     std::vector<cv::KeyPoint>& _keypoints, \
-                                    cv::OutputArray& _descriptors );
+                                    cv::OutputArray& _descriptors, \
+                                    float width_ratio, float height_ratio );
 };
 
 }

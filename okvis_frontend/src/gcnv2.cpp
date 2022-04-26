@@ -78,13 +78,15 @@ void GCNv2DetectorDescriptor::detectAndCompute( cv::InputArray _image, \
 
     // Resize image
     // Model only accept fixed size
+    float width_ratio = _gray_image_fp32.size().width /  (float) img_width;
+    float height_ratio = _gray_image_fp32.size().height / (float) img_height;
     if ( _gray_image_fp32.size().height != img_height || _gray_image_fp32.size().width != img_width )
     {
         cv::resize( _gray_image_fp32, _gray_image_fp32, cv::Size( img_width, img_height ) );
     }
 
     // Run DL model and extracto keypoints
-    detectAndComputeTorch( _gray_image_fp32, _keypoints, _descriptors );
+    detectAndComputeTorch( _gray_image_fp32, _keypoints, _descriptors, width_ratio, height_ratio );
 }
 
 
@@ -92,8 +94,9 @@ static void NonMaximalSuppression( cv::Mat kpts_raw, \
                                    cv::Mat desc_raw, \
                                    std::vector<cv::KeyPoint>& _keypoints, \
                                    cv::Mat& descriptors, \
-                                   int dist_threshold, 
-                                   int img_width, int img_height )
+                                   int dist_threshold, \
+                                   int img_width, int img_height, \
+                                   float width_ratio, float height_ratio)
 {
     cv::Mat kpt_grid  = cv::Mat( cv::Size( img_width, img_height ), CV_8UC1 );
     cv::Mat kpt_index = cv::Mat( cv::Size( img_width, img_height ), CV_16UC1 );
@@ -139,7 +142,7 @@ static void NonMaximalSuppression( cv::Mat kpts_raw, \
                 int idx = (int) kpt_index.at<unsigned short>( v - dist_threshold, u - dist_threshold );
                 int x = kpts_raw.at<float>(idx, 0);
                 int y = kpts_raw.at<float>(idx, 1);
-                _keypoints.push_back( cv::KeyPoint( x, y, 1.0f ) );
+                _keypoints.push_back( cv::KeyPoint( x * width_ratio, y * height_ratio, 1.0f ) );
                 valid_idxs.push_back(idx);
             }
         }
@@ -159,10 +162,11 @@ static void NonMaximalSuppression( cv::Mat kpts_raw, \
 
 void GCNv2DetectorDescriptor::detectAndComputeTorch( cv::Mat& _gray_image_fp32, \
                                                      std::vector<cv::KeyPoint>& _keypoints, \
-                                                     cv::OutputArray& _descriptors )
+                                                     cv::OutputArray& _descriptors, \
+                                                     float width_ratio, float height_ratio )
 {
     // Stack the gray scale image in the way model expects it
-    int dist_threshold = 8; // TODO: this should be a config param based on img height and img width
+    int dist_threshold = 20; // TODO: this should be a config param based on img height and img width
 
     // Convert OpenCV data to torch compatable data type
     static std::vector<int64_t> dims = {1, img_height, img_width, 1};
@@ -184,7 +188,7 @@ void GCNv2DetectorDescriptor::detectAndComputeTorch( cv::Mat& _gray_image_fp32, 
     cv::Mat descriptors; // descriptors after applying non-maximal suppersion on keypoints
 
     NonMaximalSuppression(kpts_raw, desc_raw, _keypoints, descriptors, \
-        dist_threshold, img_width, img_height );
+        dist_threshold, img_width, img_height, width_ratio, height_ratio );
 
     int num_kpts = _keypoints.size();
     _descriptors.create(num_kpts, 32, CV_8U);

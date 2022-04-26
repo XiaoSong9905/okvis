@@ -250,7 +250,7 @@ class VioKeyframeWindowMatchingAlgorithm : public okvis::MatchingAlgorithm {
         Exception, descriptorA != NULL && descriptorB != NULL,
         "Trying to compare a descriptor with a null description vector");
 
-    return brisk::Hamming::PopcntofXORed(descriptorA, descriptorB, 3/*48 / 16*/);
+    return brisk::Hamming::PopcntofXORed(descriptorA, descriptorB, 2/*48 / 16*/);
   }
 };
 
